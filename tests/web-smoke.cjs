@@ -20,7 +20,7 @@ const fs = require('fs');
         await page.goto('http://127.0.0.1:8765/experiments/001-haxeui/', {waitUntil:'networkidle'});
         await page.getByText('HaxeUI · esperimento 001').waitFor({state:'visible',timeout:12000});
         const metrics = await page.evaluate(() => {
-          const host = document.getElementById('haxeui-host');
+          const host = document.querySelector('.haxeui-mount');
           const card = document.querySelector('.demo-card');
           const root = host.firstElementChild;
           const hostRect = host.getBoundingClientRect();
