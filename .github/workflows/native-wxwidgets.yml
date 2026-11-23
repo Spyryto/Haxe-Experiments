@@ -6,11 +6,13 @@ on:
     paths:
       - 'experiments/001-haxeui/src/**'
       - 'experiments/002-haxeui-wxwidgets/**'
+      - 'experiments/003-hxwidgets-direct/**'
       - '.github/workflows/native-wxwidgets.yml'
   pull_request:
     paths:
       - 'experiments/001-haxeui/src/**'
       - 'experiments/002-haxeui-wxwidgets/**'
+      - 'experiments/003-hxwidgets-direct/**'
       - '.github/workflows/native-wxwidgets.yml'
   workflow_dispatch:
 
@@ -19,7 +21,7 @@ permissions:
 
 jobs:
   windows-x64:
-    name: HaxeUI / wxWidgets (static Windows x64)
+    name: Compare HaxeUI vs hxWidgets direct (Windows x64)
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -81,6 +83,13 @@ jobs:
         run: |
           & haxe experiments/000-cli/native.hxml -D ABI=-MD -D HXCPP_M64
           if ($LASTEXITCODE -ne 0) { throw "CLI baseline hxcpp compilation failed" }
+      - name: Compile direct hxWidgets via hxcpp
+        run: |
+          $clock = [Diagnostics.Stopwatch]::StartNew()
+          & haxe experiments/003-hxwidgets-direct/native-windows.hxml
+          $clock.Stop()
+          "direct_hxcpp_compile_seconds=$([math]::Round($clock.Elapsed.TotalSeconds, 2))" >> $env:GITHUB_STEP_SUMMARY
+          if ($LASTEXITCODE -ne 0) { throw "Direct hxWidgets build failed" }
       - name: Package, measure and smoke-test GUI process
         run: |
           ./experiments/002-haxeui-wxwidgets/scripts/measure.ps1
@@ -90,5 +99,16 @@ jobs:
         with:
           name: haxeui-wxwidgets-windows-x64
           path: dist/wxwidgets/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Package and measure hxWidgets direct
+        run: |
+          ./experiments/003-hxwidgets-direct/scripts/measure.ps1
+      - name: Upload direct hxWidgets executable and comparison
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hxwidgets-direct-windows-x64
+          path: dist/hxwidgets-direct/
           if-no-files-found: error
           retention-days: 30

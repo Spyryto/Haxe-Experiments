@@ -9,6 +9,7 @@ Un laboratorio pubblico di piccoli programmi Haxe: **sorgenti**, **demo web**, *
 | 000 | Baseline CLI | Haxe → hxcpp | Eseguibile Windows + dimensione in CI |
 | 001 | HaxeUI web | `haxeui-html5` | Demo JavaScript interattiva, provata su Safari iPhone |
 | 002 | HaxeUI Windows | `haxeui-hxwidgets` + hxcpp | Stesso sorgente di 001, EXE nativo Windows e misure CI |
+| 003 | hxWidgets diretto | `hxWidgets` + hxcpp, senza HaxeUI | Stessi controlli, misure comparative in un unico runner Windows |
 
 **Demo web:** https://spyryto.github.io/Haxe-Experiments/
 
@@ -40,7 +41,7 @@ Per provare la versione desktop wxWidgets, leggi [l'esperimento 002](experiments
 ## CI e pubblicazione
 
 - `validate.yml`: compila la demo HaxeUI per browser, esegue un test CLI su Node, compila la baseline C++ su Windows e carica un artefatto ZIP con l'eseguibile.
-- `native-wxwidgets.yml`: compila la GUI Windows in hxcpp con wxWidgets statico, osserva l'avvio e pubblica EXE e misure.
+- `native-wxwidgets.yml`: compila **entrambi** i backend (002: HaxeUI, 003: hxWidgets diretto) con wxWidgets statico, osserva l'avvio e pubblica gli EXE e le misure comparate.
 - `pages.yml`: pubblica la directory `site/` su GitHub Pages dopo una build riuscita su `main`.
 - Se GitHub Pages non è già configurato: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Potrebbe essere necessaria questa impostazione iniziale.
 
