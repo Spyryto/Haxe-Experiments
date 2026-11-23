@@ -4,7 +4,7 @@ import haxe.ui.containers.HBox;
 import haxe.ui.components.Label;
 import haxe.ui.components.Button;
 import haxe.ui.components.TextField;
-import haxe.ui.components.Progress;
+import haxe.ui.components.HorizontalProgress;
 
 class Main {
     static function main():Void {
@@ -32,7 +32,7 @@ class Main {
             version.width = 260;
             root.addComponent(version);
 
-            var progress = new Progress();
+            var progress = new HorizontalProgress();
             progress.pos = 0;
             progress.width = 310;
             root.addComponent(progress);
