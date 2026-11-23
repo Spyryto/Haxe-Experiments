@@ -10,6 +10,8 @@ Un laboratorio pubblico di piccoli programmi Haxe: **sorgenti**, **demo web**, *
 | 001 | HaxeUI web | `haxeui-html5` | Demo JavaScript interattiva, provata su Safari iPhone |
 | 002 | HaxeUI Windows | `haxeui-hxwidgets` + hxcpp | Stesso sorgente di 001, EXE nativo Windows e misure CI |
 | 003 | hxWidgets diretto | `hxWidgets` + hxcpp, senza HaxeUI | **6,51 MB EXE**, contro **13,42 MB** di 002; misure Windows CI |
+| 004 | Banana, gorilla, giungla | OOP ereditarietà / composizione / FP | Stesso calcolo, JavaScript e Windows, DCE on/off, dipendenza inutilizzata |
+| 005 | Anatomia dei binari | PE sections / linker MAP / dumpbin | Radiografia reale delle sezioni EXE e delle mappe di simboli |
 
 **Demo web:** https://spyryto.github.io/Haxe-Experiments/
 
@@ -36,6 +38,8 @@ haxe experiments/000-cli/native.hxml
 
 Apri `site/experiments/001-haxeui/index.html`.
 
+**Nuova radiografia:** [004 — paradigmi e DCE](experiments/004-paradigms/README.md) · [005 — anatomia degli EXE](experiments/005-binary-anatomy/README.md). Workflow: [Code anatomy and paradigms](https://github.com/Spyryto/Haxe-Experiments/actions/workflows/code-anatomy.yml).
+
 **Confronto native Windows (CI):** [esperimento 003: HaxeUI contro hxWidgets diretto](experiments/003-hxwidgets-direct/README.md).
 
 Per provare la versione desktop wxWidgets, leggi [l'esperimento 002](experiments/002-haxeui-wxwidgets/README.md), poi scarica il programma da [Native wxWidgets — Actions](https://github.com/Spyryto/Haxe-Experiments/actions/workflows/native-wxwidgets.yml).
@@ -44,6 +48,7 @@ Per provare la versione desktop wxWidgets, leggi [l'esperimento 002](experiments
 
 - `validate.yml`: compila la demo HaxeUI per browser, esegue un test CLI su Node, compila la baseline C++ su Windows e carica un artefatto ZIP con l'eseguibile.
 - `native-wxwidgets.yml`: compila **entrambi** i backend (002: HaxeUI, 003: hxWidgets diretto) con wxWidgets statico, osserva l'avvio e pubblica gli EXE e le misure comparate.
+- `code-anatomy.yml`: misura le varianti 004 in JS e hxcpp e raccoglie i dettagli delle sezioni PE e mappe MSVC delle GUI 000/002/003.
 - `pages.yml`: pubblica la directory `site/` su GitHub Pages dopo una build riuscita su `main`.
 - Se GitHub Pages non è già configurato: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Potrebbe essere necessaria questa impostazione iniziale.
 
