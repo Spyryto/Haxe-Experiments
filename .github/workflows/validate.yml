@@ -1,7 +1,7 @@
 name: Validate experiments
 on:
   push:
-    branches: [main, 'lab/**']
+    branches: [main, 'lab/**', 'fix/**']
   pull_request:
   workflow_dispatch:
 
@@ -26,6 +26,11 @@ jobs:
         run: |
           haxe experiments/001-haxeui/html5.hxml
           test -s site/experiments/001-haxeui/Main.js
+      - name: Test the actual UI in headless Chrome
+        run: |
+          npm install --no-save --silent playwright-core@1.56.1
+          python3 -m http.server 8765 --directory site > /tmp/haxeui-http.log 2>&1 &
+          node tests/web-smoke.cjs
       - name: Build and execute CLI smoke test
         run: |
           mkdir -p build

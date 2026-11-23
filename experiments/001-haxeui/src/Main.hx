@@ -8,10 +8,19 @@ import haxe.ui.components.HorizontalProgress;
 
 class Main {
     static function main():Void {
+        // On HTML5 mount HaxeUI in the actual demo element rather than in a nested iframe.
+        #if js
+        var app = new HaxeUIApp({ container: js.Browser.document.getElementById("haxeui-host") });
+        #else
         var app = new HaxeUIApp();
+        #end
         app.ready(function() {
             var root = new VBox();
+            #if js
+            root.percentWidth = 100;
+            #else
             root.width = 430;
+            #end
             root.styleString = "padding: 18px;spacing: 10px;";
 
             var heading = new Label();
@@ -34,14 +43,14 @@ class Main {
 
             var progress = new HorizontalProgress();
             progress.pos = 0;
-            progress.width = 310;
+            progress.width = 260;
             root.addComponent(progress);
 
             var status = new Label();
             status.text = "Pronto: nessun download reale.";
             root.addComponent(status);
 
-            var buttons = new HBox();
+            var buttons = new VBox();
             buttons.styleString = "spacing: 8px;";
 
             var advance = new Button();

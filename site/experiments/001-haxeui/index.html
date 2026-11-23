@@ -9,7 +9,8 @@
 body{margin:0;padding:24px}main{max-width:780px;margin:auto}
 a{color:#4534bf}header{margin-bottom:22px}
 small{color:#646080;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
-#demo{min-height:340px;background:white;border:1px solid #ded9ee;border-radius:20px;box-shadow:0 16px 42px #27205516;overflow:auto;padding:8px}
+.demo-card{min-height:390px;background:white;border:1px solid #ded9ee;border-radius:20px;box-shadow:0 16px 42px #27205516;overflow:visible;padding:8px}
+.haxeui-mount{min-height:375px;width:100%;overflow:visible}
 p{line-height:1.55}footer{margin-top:25px;font-size:14px;color:#656179}
 </style>
 </head>
@@ -21,9 +22,10 @@ p{line-height:1.55}footer{margin-top:25px;font-size:14px;color:#656179}
 <h1>Stesso codice, backend diversi</h1>
 <p>Questa interfaccia è costruita in <strong>HaxeUI</strong> e compilata in JavaScript da Haxe. I pulsanti modificano lo stato, senza effettuare download reali.</p>
 </header>
-<div id="demo"><iframe title="Interfaccia reale HaxeUI" src="./app.html" style="width:100%;height:375px;border:0;display:block" loading="eager"></iframe></div>
+<div class="demo-card"><div id="haxeui-host" class="haxeui-mount"></div></div>
 <footer>La versione desktop userà gli stessi componenti Haxe collegati a wxWidgets. <a href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/001-haxeui">Sorgente</a>.</footer>
 </main>
 
+<script src="./Main.js"></script>
 </body>
 </html>
