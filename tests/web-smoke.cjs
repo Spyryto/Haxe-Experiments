@@ -15,17 +15,19 @@ const fs = require('fs');
     page.on('console', msg => console.log('Console:', msg.type(), msg.text()));
     page.on('response', response => { if (response.status() >= 400) console.error('HTTP:', response.status(), response.url()); });
     await page.goto('http://127.0.0.1:8765/experiments/001-haxeui/', {waitUntil: 'networkidle'});
-    const iframe = page.frameLocator('iframe');
+    const app = page;
     try {
-      await iframe.getByText('HaxeUI · esperimento 001').waitFor({state:'visible',timeout:12000});
+      await app.getByText('HaxeUI · esperimento 001').waitFor({state:'visible',timeout:12000});
     } catch (e) {
-      const f = page.frames().find(x => x.url().includes('/app.html'));
-      console.error('Iframe:', f?.url());
-      console.error('Iframe HTML (first 5000 chars):', (await f?.locator('body').innerHTML())?.slice(0,5000));
+      console.error('Page HTML (first 5000 chars):', (await page.locator('body').innerHTML()).slice(0,5000));
       await page.screenshot({path:'browser-error.png',fullPage:true});
       throw e;
     }
-    await iframe.getByText('Simula progresso +20%').click();
+    const el = app.getByText('Simula progresso +20%');
+    const bounds = await el.boundingBox();
+    console.log('Button coordinates:', bounds);
+    if (!bounds || bounds.width <= 0 || bounds.height <= 0) throw Error('Button has no visible bounds');
+    await el.click({ timeout: 10000 });
     await iframe.getByText('PHP 8.4 · 20% (solo simulazione)').waitFor({state:'visible'});
     if (errors.length) throw Error(errors.join('\n'));
     console.log('BROWSER SMOKE TEST SUCCESS: UI visible, interactive, no JS exceptions.');
