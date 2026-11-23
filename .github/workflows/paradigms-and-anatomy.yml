@@ -1,0 +1,51 @@
+name: Paradigms and binary anatomy
+
+on:
+  push:
+    branches: [main, 'lab/004-*']
+    paths:
+      - 'experiments/004-paradigms/**'
+      - '.github/workflows/paradigms-and-anatomy.yml'
+  pull_request:
+    paths:
+      - 'experiments/004-paradigms/**'
+      - '.github/workflows/paradigms-and-anatomy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - name: Install hxcpp
+        run: haxelib install hxcpp 4.3.2 --always --quiet
+      - name: Build three variants
+        run: |
+          foreach ($style in @('inheritance','composition','fp')) {
+            $timer = [Diagnostics.Stopwatch]::StartNew()
+            & haxe "experiments/004-paradigms/$style.hxml"
+            if ($LASTEXITCODE -ne 0) { throw "Compilation failed for $style" }
+            $timer.Stop()
+            "compile_$style_seconds=$([math]::Round($timer.Elapsed.TotalSeconds,2))" >> $env:GITHUB_STEP_SUMMARY
+          }
+      - name: Check equivalence, benchmark and inspect binaries
+        run: ./experiments/004-paradigms/scripts/measure.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paradigms-windows-x64
+          path: dist/paradigms/
+          if-no-files-found: error
+          retention-days: 30

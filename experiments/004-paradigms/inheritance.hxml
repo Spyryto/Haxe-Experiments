@@ -1,0 +1,7 @@
+-cp experiments/004-paradigms/src
+-main Main
+-D style_inheritance
+-D dce=full
+-D HXCPP_M64
+-D ABI=-MD
+-cpp build/paradigms/inheritance
