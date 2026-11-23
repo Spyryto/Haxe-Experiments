@@ -20,13 +20,26 @@ a{color:#9bd5ff}code{color:#b4e8f9}
 <script>
 window.addEventListener('error', function(e) {
   var status = document.getElementById('load-status');
-  if (status) status.textContent = 'Errore nel caricamento della demo Haxe: controlla la pubblicazione GitHub Pages.';
+  if (!status) return;
+  // A script loading failure has a target; a runtime exception has a message.
+  if (e.target && e.target.tagName === 'SCRIPT') {
+    status.textContent = 'Impossibile caricare Main.js.';
+  } else {
+    status.textContent = 'Errore JavaScript: ' + (e.message || 'sconosciuto') +
+      (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
+  }
 }, true);
 </script>
-<script src="./Main.js" onerror="document.getElementById('load-status').textContent='Il JavaScript compilato non è disponibile su GitHub Pages. Controlla lo stato della pubblicazione.'"></script>
+<script src="./Main.js"></script>
 <script>
-if (document.querySelector('#app button')) {
+(function () {
   var status = document.getElementById('load-status');
-  if (status) status.remove();
-}
+  if (!status) return;
+  var app = document.getElementById('app');
+  if (app && app.querySelector('button')) {
+    status.remove();
+  } else if (status.textContent === 'Caricamento esperimenti Haxe…') {
+    status.textContent = 'La demo non ha generato controlli: verificare Main.js.';
+  }
+})();
 </script></body></html>
