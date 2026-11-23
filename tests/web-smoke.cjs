@@ -27,7 +27,10 @@ const fs = require('fs');
     const bounds = await el.boundingBox();
     console.log('Button coordinates:', bounds);
     if (!bounds || bounds.width <= 0 || bounds.height <= 0) throw Error('Button has no visible bounds');
-    await el.click({ timeout: 10000 });
+    console.log('Text wrapper:', await el.evaluate(node => node.parentElement?.outerHTML.slice(0, 2200)));
+    // HaxeUI's text child does not necessarily handle pointer events.
+    // Interact with the actual button parent, not the label.
+    await el.locator('..').click({ timeout: 10000 });
     await iframe.getByText('PHP 8.4 · 20% (solo simulazione)').waitFor({state:'visible'});
     if (errors.length) throw Error(errors.join('\n'));
     console.log('BROWSER SMOKE TEST SUCCESS: UI visible, interactive, no JS exceptions.');
