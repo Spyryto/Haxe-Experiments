@@ -30,7 +30,9 @@ const fs = require('fs');
     console.log('Text wrapper:', await el.evaluate(node => node.parentElement?.outerHTML.slice(0, 2200)));
     // HaxeUI's text child does not necessarily handle pointer events.
     // Interact with the actual button parent, not the label.
-    await el.locator('..').click({ timeout: 10000 });
+    const button = el.locator('xpath=../..');
+    console.log('Actual button:', await button.evaluate(node => node.outerHTML.slice(0, 1200)));
+    await button.click({ timeout: 10000 });
     await iframe.getByText('PHP 8.4 · 20% (solo simulazione)').waitFor({state:'visible'});
     if (errors.length) throw Error(errors.join('\n'));
     console.log('BROWSER SMOKE TEST SUCCESS: UI visible, interactive, no JS exceptions.');
