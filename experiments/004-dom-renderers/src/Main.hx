@@ -17,6 +17,10 @@ class Main {
     host.appendChild(a.root);
     host.appendChild(b.root);
     host.appendChild(metrics);
+    final keyedTitle = Browser.document.createHeadingElement(2);
+    keyedTitle.textContent = "Liste keyed: identità DOM persistente";
+    host.appendChild(keyedTitle);
+    host.appendChild(new KeyedDemo().root);
 
     function update():Void {
       a.render(count);
