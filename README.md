@@ -7,14 +7,15 @@ Un laboratorio pubblico di piccoli programmi Haxe: **sorgenti**, **demo web**, *
 | # | Esperimento | Tecnologia | Risultato |
 |---|-------------|------------|-----------|
 | 000 | Baseline CLI | Haxe → hxcpp | Eseguibile Windows + dimensione in CI |
-| 001 | HaxeUI: stesso codice, due backend | `haxeui-html5` / `haxeui-hxwidgets` | Demo web automatica; versione wxWidgets predisposta per le successive prove native |
+| 001 | HaxeUI web | `haxeui-html5` | Demo JavaScript interattiva, provata su Safari iPhone |
+| 002 | HaxeUI Windows | `haxeui-hxwidgets` + hxcpp | Stesso sorgente di 001, EXE nativo Windows e misure CI |
 
-**Demo web (dopo il deploy Pages):** https://spyryto.github.io/Haxe-Experiments/
+**Demo web:** https://spyryto.github.io/Haxe-Experiments/
 
 **Build:** [GitHub Actions](https://github.com/Spyryto/Haxe-Experiments/actions), dove scaricare gli artefatti prodotti dalla CI.
 
 > La demo web usa realmente HaxeUI compilato in JavaScript. Il sito catalogo usa HTML/CSS; la sua UI non è un benchmark HaxeUI.
-> La versione desktop wxWidgets è un candidato di prova, NON ancora una build Windows verificata.
+> L'EXE wxWidgets ha superato la compilazione e un avvio automatico con finestra osservata in CI; resta da verificare su un Windows dell'utente.
 > I tempi di compilazione in CI dipendono anche dalla rete e dal runner: non sono benchmark di runtime.
 
 ## Compilazione locale
@@ -34,11 +35,12 @@ haxe experiments/000-cli/native.hxml
 
 Apri `site/experiments/001-haxeui/index.html`.
 
-Per provare la versione desktop wxWidgets, leggi [le istruzioni dell'esperimento 001](experiments/001-haxeui/README.md).
+Per provare la versione desktop wxWidgets, leggi [l'esperimento 002](experiments/002-haxeui-wxwidgets/README.md), poi scarica il programma da [Native wxWidgets — Actions](https://github.com/Spyryto/Haxe-Experiments/actions/workflows/native-wxwidgets.yml).
 
 ## CI e pubblicazione
 
 - `validate.yml`: compila la demo HaxeUI per browser, esegue un test CLI su Node, compila la baseline C++ su Windows e carica un artefatto ZIP con l'eseguibile.
+- `native-wxwidgets.yml`: compila la GUI Windows in hxcpp con wxWidgets statico, osserva l'avvio e pubblica EXE e misure.
 - `pages.yml`: pubblica la directory `site/` su GitHub Pages dopo una build riuscita su `main`.
 - Se GitHub Pages non è già configurato: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Potrebbe essere necessaria questa impostazione iniziale.
 

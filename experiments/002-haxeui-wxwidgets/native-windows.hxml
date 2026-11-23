@@ -1,0 +1,14 @@
+# 002: the *same Main.hx* used by web experiment 001.
+# The only relevant variable changes here: native HaxeUI backend + wxWidgets.
+-cp experiments/001-haxeui/src
+-main Main
+-lib haxeui-core:1.7.0
+-lib hxWidgets:1.12.0
+-lib haxeui-hxwidgets:1.7.0
+
+# wxWidgets was compiled statically with MSVC x64 using the /MD runtime.
+-D haxeui_hxwidgets
+-D WXSTATIC
+-D HXCPP_M64
+-D ABI=-MD
+-cpp build/haxeui-wxwidgets
