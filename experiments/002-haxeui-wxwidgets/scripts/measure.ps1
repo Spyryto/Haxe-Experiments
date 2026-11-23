@@ -13,6 +13,10 @@ $dlls = @(Get-ChildItem -LiteralPath $exe.DirectoryName -Filter '*.dll' -File)
 foreach($dll in $dlls) { Copy-Item -LiteralPath $dll.FullName -Destination dist/wxwidgets }
 
 $bytes = (Get-Item -LiteralPath $target).Length
+$cli = Get-ChildItem -Path build/cli -Recurse -Filter 'Main.exe' -File | Select-Object -First 1
+if ($null -eq $cli) { throw "CLI baseline executable is missing" }
+$cliBytes = [int64]$cli.Length
+$guiVsCli = [math]::Round($bytes / $cliBytes, 2)
 $shipped = @(Get-ChildItem -LiteralPath dist/wxwidgets -File)
 $packageBytes = ($shipped | Measure-Object -Property Length -Sum).Sum
 if ($null -eq $packageBytes) { $packageBytes = 0 }
@@ -61,6 +65,8 @@ $result = [ordered]@{
   wxwidgets = "3.1.3"
   wx_linkage = "static"
   executable_bytes = [int64]$bytes
+  cli_baseline_bytes = $cliBytes
+  gui_to_cli_executable_size_ratio = $guiVsCli
   shipped_files_bytes = [int64]$packageBytes
   adjacent_dll_count = $dlls.Count
   window_observed = $windowSeen
@@ -77,6 +83,8 @@ if ($env:GITHUB_STEP_SUMMARY) {
     "| Metrica | Valore |"
     "|---|---:|"
     "| EXE (byte) | $bytes |"
+    "| CLI baseline EXE (byte) | $cliBytes |"
+    "| Dimensioni GUI / baseline | ${guiVsCli}x |"
     "| Pacchetto (byte) | $packageBytes |"
     "| DLL affiancate | $($dlls.Count) |"
     "| Processo vivo dopo 2 sec | $stillRunning |"

@@ -77,6 +77,10 @@ jobs:
           "hxcpp_compile_seconds=$([math]::Round($clock.Elapsed.TotalSeconds,2))" >> $env:GITHUB_STEP_SUMMARY
           if ($LASTEXITCODE -ne 0) { throw "Haxe/hxcpp build failed" }
 
+      - name: Compile CLI baseline for like-for-like size comparison
+        run: |
+          & haxe experiments/000-cli/native.hxml -D ABI=-MD -D HXCPP_M64
+          if ($LASTEXITCODE -ne 0) { throw "CLI baseline hxcpp compilation failed" }
       - name: Package, measure and smoke-test GUI process
         run: |
           ./experiments/002-haxeui-wxwidgets/scripts/measure.ps1

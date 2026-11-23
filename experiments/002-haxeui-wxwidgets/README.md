@@ -13,7 +13,8 @@ Workflow **[Native wxWidgets](../../.github/workflows/native-wxwidgets.yml)**. I
 3. Compila lo stesso sorgente della demo web via Haxe → hxcpp → C++/wxWidgets.
 4. Avvia il processo con un timeout e verifica che non termini subito. Cerca anche una finestra Win32: nei runner CI headless potrebbe non essere osservabile.
 5. Misura le dimensioni dell'EXE, delle DLL affiancate, del pacchetto complessivo e delle dipendenze con `dumpbin /dependents`. Registra un tempo **approssimativo** per osservare la finestra e l'uso di RAM, se disponibili.
-6. Crea l'artefatto `haxeui-wxwidgets-windows-x64`, contenente la cartella da distribuire e un file `measurements.json`.
+6. Compila anche l'esperimento 000 CLI con la stessa ABI MSVC, registrando la dimensione dell'EXE e il rapporto GUI/CLI.
+7. Crea l'artefatto `haxeui-wxwidgets-windows-x64`, contenente la cartella da distribuire e un file `measurements.json`.
 
 **Non usare l'esito della sola compilazione come prova che la GUI funzioni visivamente.** Il controllo definitivo dell'aspetto e dell'interazione va effettuato su un Windows reale.
 
@@ -34,3 +35,20 @@ L'app è un **simulatore**: cambiare la barra di avanzamento non installa PHP. I
 - Il tempo compilazione comprende una prima compilazione hxcpp e varia per cache e runner.
 - I tempi di avvio misurati dalla CI non sono equivalenti a un benchmark locale e possono essere omessi se il runner non espone una finestra.
 - Prima della prova, confrontare la dimensione del pacchetto con l'eseguibile CLI dell'esperimento 000 (stessa architettura).
+
+## Prima misura reale (CI PR #4, 23 novembre 2026)
+
+La prima compilazione Windows è riuscita e il processo ha mostrato una finestra:
+
+| Metrica | Valore osservato |
+|---|---:|
+| EXE GUI | 13.419.008 byte (13,42 MB decimali) |
+| ZIP distribuzione | 5.191.472 byte (5,19 MB) |
+| DLL affiancate | 0 |
+| Finestra osservata | sì |
+| Avvio → finestra, runner CI | 334 ms |
+| RAM working set, runner CI | 36.597.760 byte (~36,6 MB) |
+
+[Prima build valida della PR #4](https://github.com/Spyryto/Haxe-Experiments/actions/runs/45172245483)
+
+Queste misure non dimostrano automaticamente portabilità su installazioni Windows pulite: la prova manuale è ancora necessaria. Le successive build registrano anche la dimensione della baseline CLI, compilata nello stesso ambiente.
