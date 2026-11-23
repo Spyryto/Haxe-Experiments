@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DOM Lab — Imba e hyperHTML in Haxe</title>
+<style>
+:root{font-family:system-ui;color-scheme:dark;background:#101525;color:#f5f6ff}
+body{max-width:760px;margin:auto;padding:24px 18px;line-height:1.55}
+h1{font-size:2rem}section{background:#222c47;border-radius:18px;padding:18px;margin:18px 0}
+button{background:#8bf0d0;color:#142035;border:0;border-radius:10px;padding:12px;margin:6px;font-weight:700}
+a{color:#9bd5ff}code{color:#b4e8f9}
+</style></head><body>
+<a href="../../index.html">← Laboratorio Haxe</a>
+<h1>DOM Lab</h1>
+<p>Tre obiettivi: capire i meccanismi, osservare le mutazioni DOM, confrontare implementazioni Haxe.</p>
+<section><h2>Primo esperimento: nodi persistenti</h2><p>Questi sono <strong>modelli didattici ridotti</strong>, non ancora port completi di Imba o hyperHTML. Premendo «Render senza modifica» non devono avvenire nuove scritture.</p><div id="app"></div></section>
+<section><h2>Come funzionano?</h2>
+<p><strong>Imba-style:</strong> conserva i riferimenti ai nodi e il valore precedente; aggiorna soltanto quando cambia.</p>
+<p><strong>hyperHTML-style:</strong> conserva il template e aggiorna lo slot dinamico; il vero hyperHTML supporta anche attributi, eventi, wire e liste con diff.</p>
+<p><strong>Da implementare:</strong> macro Haxe che generano nodi, slot attributo/evento, riconciliazione keyed, gestione lifecycle, benchmark indipendenti dalla UI.</p>
+</section>
+<script src="./Main.js"></script></body></html>
