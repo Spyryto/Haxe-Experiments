@@ -24,7 +24,7 @@ function Read-PeSections([string]$file) {
             file_raw_bytes = [int64][BitConverter]::ToUInt32($data, $off + 16)
         }
     }
-    return ,$sections
+    return $sections
 }
 
 function Find-Map([string]$mapName) {
