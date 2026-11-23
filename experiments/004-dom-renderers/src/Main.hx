@@ -21,6 +21,10 @@ class Main {
     keyedTitle.textContent = "Liste keyed: identità DOM persistente";
     host.appendChild(keyedTitle);
     host.appendChild(new KeyedDemo().root);
+    final slotsTitle = Browser.document.createElement("h2");
+    slotsTitle.textContent = "Template persistente: testo, proprietà, evento";
+    host.appendChild(slotsTitle);
+    host.appendChild(new TemplateDemo().root);
 
     function update():Void {
       a.render(count);
