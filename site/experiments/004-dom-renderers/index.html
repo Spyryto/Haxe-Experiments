@@ -11,10 +11,22 @@ a{color:#9bd5ff}code{color:#b4e8f9}
 <a href="../../index.html">← Laboratorio Haxe</a>
 <h1>DOM Lab</h1>
 <p>Tre obiettivi: capire i meccanismi, osservare le mutazioni DOM, confrontare implementazioni Haxe.</p>
-<section><h2>Primo esperimento: nodi persistenti</h2><p>Questi sono <strong>modelli didattici ridotti</strong>, non ancora port completi di Imba o hyperHTML. Premendo «Render senza modifica» non devono avvenire nuove scritture.</p><div id="app"></div></section>
+<section><h2>Primo esperimento: nodi persistenti</h2><p>Questi sono <strong>modelli didattici ridotti</strong>, non ancora port completi di Imba o hyperHTML. Premendo «Render senza modifica» non devono avvenire nuove scritture.</p><div id="app"><p id="load-status" role="status">Caricamento esperimenti Haxe…</p></div></section>
 <section><h2>Come funzionano?</h2><p>La lista keyed conserva gli stessi elementi LI quando cambia l'ordine. L'algoritmo didattico è intenzionalmente semplice: non è il port del domdiff originale e non garantisce il numero minimo di spostamenti.</p>
 <p><strong>Imba-style:</strong> conserva i riferimenti ai nodi e il valore precedente; aggiorna soltanto quando cambia.</p>
 <p><strong>hyperHTML-style:</strong> conserva il template e aggiorna lo slot dinamico; il vero hyperHTML supporta anche attributi, eventi, wire e liste con diff.</p>
 <p><strong>Da implementare:</strong> macro Haxe che generano nodi, slot attributo/evento, riconciliazione keyed, gestione lifecycle, benchmark indipendenti dalla UI.</p>
 </section>
-<script src="./Main.js"></script></body></html>
+<script>
+window.addEventListener('error', function(e) {
+  var status = document.getElementById('load-status');
+  if (status) status.textContent = 'Errore nel caricamento della demo Haxe: controlla la pubblicazione GitHub Pages.';
+}, true);
+</script>
+<script src="./Main.js" onerror="document.getElementById('load-status').textContent='Il JavaScript compilato non è disponibile su GitHub Pages. Controlla lo stato della pubblicazione.'"></script>
+<script>
+if (document.querySelector('#app button')) {
+  var status = document.getElementById('load-status');
+  if (status) status.remove();
+}
+</script></body></html>
