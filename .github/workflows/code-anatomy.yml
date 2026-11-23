@@ -1,0 +1,119 @@
+name: Code anatomy and paradigms
+on:
+  pull_request:
+    paths:
+      - 'experiments/004-paradigms/**'
+      - 'experiments/005-binary-anatomy/**'
+      - '.github/workflows/code-anatomy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/004-paradigms/**'
+      - 'experiments/005-binary-anatomy/**'
+      - '.github/workflows/code-anatomy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  js-paradigms:
+    name: Haxe JS / DCE / inheritance vs composition vs FP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - run: haxelib install hxnodejs --always --quiet
+      - name: Compile, run, and measure 9 equivalent JS programs
+        shell: pwsh
+        run: ./experiments/004-paradigms/scripts/measure-js.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paradigms-js-size-dce
+          path: dist/004-js/
+          if-no-files-found: error
+
+  cpp-paradigms:
+    name: Haxe hxcpp / DCE / paradigms (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - run: haxelib install hxcpp 4.3.2 --always --quiet
+      - name: Build and run comparable Windows programs
+        run: ./experiments/004-paradigms/scripts/measure-cpp.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paradigms-hxcpp-windows-x64
+          path: dist/004-cpp/
+          if-no-files-found: error
+
+  gui-anatomy:
+    name: PE sections and linker maps / wxWidgets
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - name: Install fixed GUI dependencies
+        run: |
+          haxelib install hxcpp 4.3.2 --always --quiet
+          haxelib install hxWidgets 1.12.0 --always --quiet
+          haxelib install haxeui-core 1.7.0 --always --quiet
+          haxelib install haxeui-hxwidgets 1.7.0 --always --quiet
+      - name: Fetch wxWidgets 3.1.3
+        run: |
+          $wx = Join-Path (Get-Location).Path "wxWidgets-3.1.3"
+          Invoke-WebRequest -Uri "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.3/wxWidgets-3.1.3.tar.bz2" -OutFile wx.tar.bz2
+          tar.exe -xjf wx.tar.bz2
+          if ($LASTEXITCODE -ne 0) { throw "wxWidgets extract failed" }
+          "WXWIN=$wx" >> $env:GITHUB_ENV
+      - name: Cache static wxWidgets
+        id: wxcache
+        uses: actions/cache@v4
+        with:
+          path: wxWidgets-3.1.3/lib/vc_x64_lib
+          key: wx313-msvc-x64-static-v1-${{ runner.os }}
+      - name: Build wxWidgets only if cache missed
+        if: steps.wxcache.outputs.cache-hit != 'true'
+        run: |
+          Push-Location "$env:WXWIN/build/msw"
+          try {
+            & nmake.exe -f makefile.vc BUILD=release TARGET_CPU=X64 SHARED=0 RUNTIME_LIBS=dynamic
+            if ($LASTEXITCODE -ne 0) { throw "wxWidgets compilation failed" }
+          } finally { Pop-Location }
+      - name: Compile 000/002/003 with MSVC linker MAP files
+        run: |
+          & haxe experiments/000-cli/native.hxml -D ABI=-MD -D HXCPP_M64 -D HXCPP_MAP_FILE=scan-cli.map
+          if ($LASTEXITCODE -ne 0) { throw "000 failed" }
+          & haxe experiments/003-hxwidgets-direct/native-windows.hxml -D HXCPP_MAP_FILE=scan-direct.map
+          if ($LASTEXITCODE -ne 0) { throw "003 failed" }
+          & haxe experiments/002-haxeui-wxwidgets/native-windows.hxml -D HXCPP_MAP_FILE=scan-haxeui.map
+          if ($LASTEXITCODE -ne 0) { throw "002 failed" }
+      - name: Collect PE sections, linker symbol inventory, maps, and inputs
+        run: ./experiments/005-binary-anatomy/inspect.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gui-binary-anatomy-windows
+          path: dist/005-anatomy/
+          if-no-files-found: error
+          retention-days: 30
