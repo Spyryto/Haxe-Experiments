@@ -17,7 +17,7 @@ class Main {
     host.appendChild(a.root);
     host.appendChild(b.root);
     host.appendChild(metrics);
-    final keyedTitle = Browser.document.createHeadingElement(2);
+    final keyedTitle = cast(Browser.document.createElement("h2"), js.html.HeadingElement);
     keyedTitle.textContent = "Liste keyed: identità DOM persistente";
     host.appendChild(keyedTitle);
     host.appendChild(new KeyedDemo().root);
