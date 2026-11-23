@@ -2,16 +2,18 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Esperimento 001 · HaxeUI</title>
 <style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f7f5ef;color:#292746}
-body{margin:0;padding:24px}main{max-width:780px;margin:auto}
+*{box-sizing:border-box}body{margin:0;padding:clamp(12px,4vw,24px)}main{max-width:780px;margin:auto}
 a{color:#4534bf}header{margin-bottom:22px}
 small{color:#646080;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
-.demo-card{min-height:390px;background:white;border:1px solid #ded9ee;border-radius:20px;box-shadow:0 16px 42px #27205516;overflow:visible;padding:8px}
-.haxeui-mount{min-height:375px;width:100%;overflow:visible}
+.demo-card{min-height:300px;background:white;border:1px solid #ded9ee;border-radius:20px;box-shadow:0 16px 42px #27205516;overflow:visible;padding:8px}
+.haxeui-mount{min-height:280px;width:100%;overflow:visible}
 p{line-height:1.55}footer{margin-top:25px;font-size:14px;color:#656179}
+@media(max-width:480px){.demo-card{padding:8px;border-radius:18px}}
 </style>
 </head>
 <body>
@@ -26,6 +28,27 @@ p{line-height:1.55}footer{margin-top:25px;font-size:14px;color:#656179}
 <footer>La versione desktop userà gli stessi componenti Haxe collegati a wxWidgets. <a href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/001-haxeui">Sorgente</a>.</footer>
 </main>
 
+<script>
+(function () {
+  // HaxeUI components are absolutely positioned; they do not contribute to
+  // the height of a normal HTML container. Follow their measured height.
+  const host = document.getElementById('haxeui-host');
+  let observedRoot = null;
+  const resize = () => {
+    const root = host.firstElementChild;
+    if (!root) return;
+    if (root !== observedRoot) {
+      observedRoot = root;
+      if (window.ResizeObserver) new ResizeObserver(resize).observe(root);
+    }
+    const hostTop = host.getBoundingClientRect().top;
+    const bottom = root.getBoundingClientRect().bottom;
+    host.style.minHeight = Math.max(280, Math.ceil(bottom - hostTop + 12)) + 'px';
+  };
+  new MutationObserver(resize).observe(host, { childList: true });
+  window.addEventListener('resize', resize);
+})();
+</script>
 <script src="./Main.js"></script>
 </body>
 </html>
