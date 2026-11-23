@@ -30,3 +30,14 @@ La demo misura il tempo di 1000 aggiornamenti **incluso** il rendering delle met
 `KeyedList.hx` conserva un nodo LI per chiave, elimina le chiavi scomparse e inserisce/riordina da destra a sinistra usando `insertBefore`. Una chiave duplicata è un errore. L'identità dei nodi sopravvive ai riordini. **Non è il port di domdiff**: il suo algoritmo originale implementa ottimizzazioni per prefissi/suffissi e casi più complessi. Il contatore `moved` misura invocazioni `insertBefore`, comprese le prime inserzioni, non soltanto spostamenti.
 
 Fonti tecniche: [domdiff](https://github.com/WebReflection/domdiff), [hyperHTML](https://github.com/WebReflection/hyperHTML), [Imba](https://github.com/imba/imba).
+
+## Fase 3 — template con slot persistenti
+
+`TemplateSlots.hx` separa nodi statici e riferimenti dinamici: un text node aggiornato tramite `data`, una proprietà booleana `disabled`, un handler `onclick` sostituito senza accumulare listener. `TemplateDemo.hx` espone controlli per mutazioni e aggiornamenti no-op. Questa è una riproduzione manuale del meccanismo di slot, **non** un parser di tagged templates né il runtime completo di hyperHTML.
+
+### Da studiare nel sorgente originale
+
+- Identità del template literal e cache delle parti statiche.
+- `bind` versus `wire`: identità e riutilizzo del frammento.
+- Gestione di attributi, eventi, liste e nodi speciali.
+- Compilazione Imba: come il compilatore produce riferimenti persistenti e aggiornamenti specializzati.
