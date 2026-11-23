@@ -9,7 +9,7 @@ Un laboratorio pubblico di piccoli programmi Haxe: **sorgenti**, **demo web**, *
 | 000 | Baseline CLI | Haxe → hxcpp | Eseguibile Windows + dimensione in CI |
 | 001 | HaxeUI web | `haxeui-html5` | Demo JavaScript interattiva, provata su Safari iPhone |
 | 002 | HaxeUI Windows | `haxeui-hxwidgets` + hxcpp | Stesso sorgente di 001, EXE nativo Windows e misure CI |
-| 003 | hxWidgets diretto | `hxWidgets` + hxcpp, senza HaxeUI | Stessi controlli, misure comparative in un unico runner Windows |
+| 003 | hxWidgets diretto | `hxWidgets` + hxcpp, senza HaxeUI | **6,51 MB EXE**, contro **13,42 MB** di 002; misure Windows CI |
 
 **Demo web:** https://spyryto.github.io/Haxe-Experiments/
 
@@ -35,6 +35,8 @@ haxe experiments/000-cli/native.hxml
 ```
 
 Apri `site/experiments/001-haxeui/index.html`.
+
+**Confronto native Windows (CI):** [esperimento 003: HaxeUI contro hxWidgets diretto](experiments/003-hxwidgets-direct/README.md).
 
 Per provare la versione desktop wxWidgets, leggi [l'esperimento 002](experiments/002-haxeui-wxwidgets/README.md), poi scarica il programma da [Native wxWidgets — Actions](https://github.com/Spyryto/Haxe-Experiments/actions/workflows/native-wxwidgets.yml).
 
