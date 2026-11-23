@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La banana, il gorilla e i megabyte · Haxe Experiments</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#272040;background:#f9f6ef;line-height:1.6}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:940px;margin:0 auto;padding:20px 18px 70px}
+a{color:#5a3aa5}
+.hero{background:#30214d;color:white;padding:46px 18px 54px;border-bottom:7px solid #fac45b}
+.hero>div{max-width:940px;margin:auto}
+.hero a{color:#f7c567}
+.eyebrow{letter-spacing:.15em;text-transform:uppercase;color:#fac45b;font-size:12px;font-weight:800}
+h1{font-size:clamp(36px,7vw,67px);line-height:1.06;letter-spacing:-.055em;margin:18px 0}
+h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.04em;margin:42px 0 12px}
+p{max-width:76ch}
+.lead{font-size:clamp(16px,2.8vw,20px);color:#eae4fa;max-width:700px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 0}
+.chip{border:1px solid #9f88cd;border-radius:40px;padding:5px 12px;font-size:13px;color:#e9e0fc}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:23px 0}
+.stat{background:#fff;border:1px solid #ddd3ee;border-radius:19px;padding:20px;box-shadow:0 9px 0 #43336c0a}
+.stat strong{display:block;font-size:clamp(25px,4.5vw,38px);letter-spacing:-.05em;color:#5b3eaa}
+.stat small{color:#625b72;font-size:13px}
+.tableWrap{overflow-x:auto;border:1px solid #e6dfce;border-radius:15px;background:white}
+table{width:100%;border-collapse:collapse;min-width:540px;font-size:15px}
+th,td{padding:13px 14px;border-bottom:1px solid #eee9e1;text-align:left;vertical-align:top}
+tr:last-child td{border:0}
+th{background:#f1ebff;font-size:13px}
+td:nth-child(n+2),th:nth-child(n+2){font-variant-numeric:tabular-nums;text-align:right}
+.barset{display:grid;gap:12px;background:white;border:1px solid #e6dfce;border-radius:16px;padding:20px}
+.bar{display:grid;grid-template-columns:100px minmax(0,1fr) 82px;align-items:center;gap:12px;font-size:14px}
+.bar i{display:block;height:23px;border-radius:5px;background:#7f66cb}
+.bar:nth-child(2) i{background:#e8a647}
+.bar:nth-child(3) i{background:#4c998c}
+.bar b{text-align:right;font-size:13px}
+.note{background:#fff6dd;border-left:4px solid #e0a943;padding:14px 18px;border-radius:0 11px 11px 0}
+code{background:#eee7fa;border-radius:5px;padding:2px 5px}
+footer{margin-top:55px;border-top:2px solid #ded5c9;padding-top:20px;color:#625b72;font-size:14px}
+@media(max-width:460px){.bar{grid-template-columns:70px minmax(0,1fr) 65px;gap:8px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="hero"><div>
+<a href="../../">← Haxe Experiments</a>
+<p class="eyebrow">Esperimenti 004 + 005 · 23 novembre 2026</p>
+<h1>La banana, il gorilla<br>e i megabyte. 🍌</h1>
+<p class="lead">Dove finiscono i byte del codice compilato? Abbiamo confrontato ereditarietà, composizione e funzioni pure, poi aperto davvero gli EXE Windows e le mappe del linker MSVC.</p>
+<div class="chips"><span class="chip">Haxe 4.3.7</span><span class="chip">hxcpp 4.3.2</span><span class="chip">Windows x64</span><span class="chip">JavaScript / Node</span></div>
+</div></div>
+<main>
+<section>
+<h2>1. Il paradigma pesa meno della raggiungibilità</h2>
+<p>Tre versioni realizzano lo stesso calcolo, stampando tutte <code>checksum=1508812</code>. Una classe «Jungle» contiene una stringa fittizia di circa 10 KB, richiamata esclusivamente da un metodo <code>gorilla()</code> che non viene eseguito. La DCE può scartarlo: se la disattiviamo, la «giungla» riappare.</p>
+<div class="tableWrap"><table>
+<thead><tr><th>Paradigma</th><th>JS con DCE full</th><th>JS senza DCE</th><th>EXE con DCE full</th><th>EXE senza DCE</th></tr></thead>
+<tbody>
+<tr><td>OOP · ereditarietà</td><td>2.870 B</td><td>138.519 B</td><td>451.072 B</td><td>1.419.264 B</td></tr>
+<tr><td>OOP · composizione</td><td>2.606 B</td><td>138.578 B</td><td>452.096 B</td><td>1.420.288 B</td></tr>
+<tr><td>Funzione pura</td><td>2.354 B</td><td>138.154 B</td><td>447.488 B</td><td>1.416.192 B</td></tr>
+</tbody></table></div>
+<p>La variante FP ha soltanto una funzione pura e non alloca un oggetto; il ciclo che la richiama rimane imperativo e comune agli altri programmi. <strong>Non è un benchmark generale del paradigma funzionale</strong> né delle prestazioni di esecuzione.</p>
+<p>Forzando la raggiungibilità del gorilla nella variante con ereditarietà e DCE full, l'EXE sale da <strong>451.072 a 467.456 byte</strong>: il compilatore include davvero una parte prima rimossa. Con DCE disattivata entrano inoltre molte altre funzionalità, perciò non è corretto attribuire tutti i byte aggiuntivi alla stringa sintetica.</p>
+<p><a href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/004-paradigms">Sorgenti delle tre varianti</a> · <a href="https://github.com/Spyryto/Haxe-Experiments/actions/workflows/code-anatomy.yml">CI e dati grezzi</a></p>
+</section>
+
+<section>
+<h2>2. Dove si accumulano i 6,9 MB di HaxeUI?</h2>
+<p>Abbiamo confrontato due applicazioni Windows con gli stessi controlli visibili: una con HaxeUI + hxWidgets e una con hxWidgets diretto, entrambe con wxWidgets collegato staticamente.</p>
+<div class="stats">
+<div class="stat"><strong>13,42 MB</strong><small>EXE HaxeUI</small></div>
+<div class="stat"><strong>6,51 MB</strong><small>EXE hxWidgets diretto</small></div>
+<div class="stat"><strong>+6,90 MB</strong><small>Differenza nell'eseguibile</small></div>
+</div>
+<p>La differenza reale, letta direttamente dalle sezioni PE, si distribuisce così:</p>
+<div class="barset">
+<div class="bar"><span>Codice .text</span><i style="width:100%"></i><b>4,64 MB</b></div>
+<div class="bar"><span>.rdata</span><i style="width:30.1%"></i><b>1,40 MB</b></div>
+<div class="bar"><span>.data</span><i style="width:11.4%"></i><b>0,53 MB</b></div>
+<div class="bar"><span>.pdata</span><i style="width:4.7%"></i><b>0,22 MB</b></div>
+<div class="bar"><span>.reloc</span><i style="width:2.5%"></i><b>0,12 MB</b></div>
+</div>
+<p><strong>Il 67,2% della differenza è codice macchina</strong>; il 20,2% sono dati di sola lettura. Le risorse grafiche <code>.rsrc</code> sono identiche (1.024 byte). Queste grandezze sono byte di sezione raw su disco, inclusi gli allineamenti PE.</p>
+</section>
+
+<section>
+<h2>3. Le mappe rivelano le origini del codice</h2>
+<p>La mappa del linker associa simboli a file oggetto e membri delle librerie. Contando <em>sia simboli pubblici sia statici</em> troviamo:</p>
+<div class="tableWrap"><table>
+<thead><tr><th>Origini distinte</th><th>hxWidgets diretto</th><th>HaxeUI</th></tr></thead>
+<tbody>
+<tr><td>Oggetti generati da Haxe/hxcpp</td><td>86</td><td>1.163</td></tr>
+<tr><td>Membri di librerie statiche / import</td><td>509</td><td>526</td></tr>
+<tr><td>Totale, incluse origini speciali</td><td>600</td><td>1.694</td></tr>
+</tbody></table></div>
+<p>HaxeUI aggiunge <strong>1.077 origini di file oggetto Haxe/hxcpp</strong>, contro soltanto 17 origini aggiuntive di libreria. Nell'EXE sono visibili anche nomi di componenti non usati dalla demo, per esempio <code>PropertyGrid</code> e <code>CalendarView</code>. Questo è un indizio concreto di una registrazione ampia dei tipi, ma non attribuisce automaticamente una quantità precisa di byte a ogni libreria.</p>
+<p>Le 23 librerie statiche wxWidgets compilate occupavano complessivamente circa 404 MB <em>prima del link</em>. **Non** significa che tutti questi byte siano stati copiati nell'EXE: il linker ne seleziona soltanto le parti necessarie.</p>
+<p><a href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/005-binary-anatomy">Script della radiografia</a> · <a href="https://github.com/Spyryto/Haxe-Experiments/actions/runs/45191003719/artifacts/14825808210">Mappe complete MSVC, TXT e JSON</a></p>
+</section>
+
+<section>
+<h2>4. Qual è il prossimo esperimento decisivo?</h2>
+<div class="note"><strong>Compilare la stessa GUI HaxeUI con <code>-dce full</code>, senza cambiarne il codice.</strong> Per impostazione predefinita Haxe usa <code>-dce std</code>, che elimina soltanto il codice inutilizzato della libreria standard, non quello delle librerie esterne. La modalità full potrebbe ridurre parecchio il framework, ma dobbiamo verificare che componenti dinamici e reflection continuino a funzionare.</div>
+<p><a href="https://haxe.org/manual/cr-dce.html">Documentazione ufficiale Haxe sulla DCE</a>.</p>
+<p>Conclusione provvisoria: l'ereditarietà di per sé non è il gorilla; <strong>il punto critico è il grafo delle dipendenze che il compilatore e il linker devono conservare</strong>.</p>
+</section>
+<footer>
+Report sperimentale: numeri rilevati in specifiche build CI del 23 novembre 2026, non benchmark universali. I tempi di avvio non sono qui confrontati perché il runner Windows è condiviso e non garantisce condizioni costanti. Codice, metodologia e output: <a href="https://github.com/Spyryto/Haxe-Experiments">Haxe-Experiments</a>.
+</footer>
+</main></body></html>
