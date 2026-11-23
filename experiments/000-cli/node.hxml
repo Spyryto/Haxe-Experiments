@@ -1,0 +1,4 @@
+-cp experiments/000-cli/src
+-main Main
+-js build/cli.js
+-lib hxnodejs

@@ -1,0 +1,68 @@
+name: Validate experiments
+on:
+  push:
+    branches: [main, 'lab/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: HaxeUI HTML5 + CLI Node
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - name: Install dependencies
+        run: |
+          haxelib install haxeui-core 1.7.0 --always --quiet
+          haxelib install haxeui-html5 1.7.0 --always --quiet
+          haxelib install hxnodejs --always --quiet
+      - name: Build web experiment
+        run: |
+          haxe experiments/001-haxeui/html5.hxml
+          test -s site/experiments/001-haxeui/Main.js
+      - name: Build and execute CLI smoke test
+        run: |
+          mkdir -p build
+          haxe experiments/000-cli/node.hxml
+          node build/cli.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: site/
+          if-no-files-found: error
+
+  native-windows:
+    name: Baseline hxcpp / Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - name: Install hxcpp
+        run: haxelib install hxcpp --always --quiet
+      - name: Build native exe
+        shell: pwsh
+        run: |
+          haxe experiments/000-cli/native.hxml
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $exe = Get-ChildItem build/cli -Recurse -Filter Main.exe | Select-Object -First 1
+          if (!$exe) { throw "Main.exe not found" }
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item $exe.FullName dist/Main.exe
+          $size = (Get-Item dist/Main.exe).Length
+          "bytes=$size" | Set-Content dist/measurements.txt
+          "windows_baseline_bytes=$size" >> $env:GITHUB_STEP_SUMMARY
+          & dist/Main.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cli-windows-x64
+          path: dist/
+          if-no-files-found: error

@@ -1,0 +1,5 @@
+-cp experiments/001-haxeui/src
+-lib haxeui-core:1.7.0
+-lib haxeui-html5:1.7.0
+-main Main
+-js site/experiments/001-haxeui/Main.js

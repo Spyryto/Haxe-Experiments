@@ -1,0 +1,40 @@
+name: Publish lab website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - name: Install dependencies
+        run: |
+          haxelib install haxeui-core 1.7.0 --always --quiet
+          haxelib install haxeui-html5 1.7.0 --always --quiet
+      - name: Build HaxeUI website
+        run: |
+          haxe experiments/001-haxeui/html5.hxml
+          test -s site/experiments/001-haxeui/Main.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+      - id: deploy
+        uses: actions/deploy-pages@v4
