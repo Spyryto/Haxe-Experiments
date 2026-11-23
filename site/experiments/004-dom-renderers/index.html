@@ -18,28 +18,20 @@ a{color:#9bd5ff}code{color:#b4e8f9}
 <p><strong>Da implementare:</strong> macro Haxe che generano nodi, slot attributo/evento, riconciliazione keyed, gestione lifecycle, benchmark indipendenti dalla UI.</p>
 </section>
 <script>
-window.addEventListener('error', function(e) {
+function demoFailed(message) {
   var status = document.getElementById('load-status');
-  if (!status) return;
-  // A script loading failure has a target; a runtime exception has a message.
-  if (e.target && e.target.tagName === 'SCRIPT') {
-    status.textContent = 'Impossibile caricare Main.js.';
-  } else {
-    status.textContent = 'Errore JavaScript: ' + (e.message || 'sconosciuto') +
-      (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
-  }
-}, true);
+  if (status && !document.querySelector('#app button')) status.textContent = message;
+}
 </script>
-<script src="./Main.js"></script>
+<script src="./Main.js?v=4" onerror="demoFailed('Impossibile caricare Main.js')"></script>
 <script>
 (function () {
   var status = document.getElementById('load-status');
   if (!status) return;
-  var app = document.getElementById('app');
-  if (app && app.querySelector('button')) {
+  if (document.querySelector('#app button')) {
     status.remove();
-  } else if (status.textContent === 'Caricamento esperimenti Haxe…') {
-    status.textContent = 'La demo non ha generato controlli: verificare Main.js.';
+  } else {
+    status.textContent = 'La demo non si è avviata. Controllare il JavaScript compilato.';
   }
 })();
 </script></body></html>
