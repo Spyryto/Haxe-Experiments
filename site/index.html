@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haxe Experiments • Laboratorio</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#25213e;background:#f7f4eb}
+*{box-sizing:border-box}body{margin:0}.wrap{width:min(1080px,calc(100% - 32px));margin:0 auto}
+header{background:#282047;color:#fff;padding:70px 0 65px;position:relative;overflow:hidden}
+header:before{content:"Hx";position:absolute;right:-15px;top:-100px;font-size:360px;font-weight:950;opacity:.06;line-height:1}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:#f7c16d}
+h1{font-size:clamp(44px,8vw,78px);letter-spacing:-.06em;line-height:1.02;margin:13px 0 18px}
+.lead{font-size:clamp(17px,2vw,22px);max-width:650px;line-height:1.55;color:#e7deff}
+.tag{display:inline-block;border:1px solid #ffffff45;border-radius:100px;padding:8px 13px;margin:14px 8px 0 0;font-size:13px}
+main{padding:48px 0 68px}.section-title{font-size:27px;letter-spacing:-.04em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:19px}
+article{background:#fff;border:1px solid #e6dfcf;border-radius:22px;padding:27px;box-shadow:0 9px 18px #38305509}
+.number{display:inline-block;font-weight:850;color:#7d45c8;background:#f1eafb;padding:8px 10px;border-radius:9px}
+article h3{font-size:25px;letter-spacing:-.04em;margin:18px 0 11px}
+article p{line-height:1.55;color:#5a5768;min-height:80px}
+a.action{display:inline-block;background:#f8c55c;color:#282047;padding:13px 18px;border-radius:11px;text-decoration:none;font-weight:780}
+a.secondary{color:#42367b;text-decoration:none;font-weight:750;margin-left:12px}
+.note{color:#746e7a;line-height:1.5;font-size:14px;max-width:700px;margin-top:29px}
+footer{border-top:1px solid #e1d9ca;padding:22px 0 35px;font-size:14px;color:#696171}
+footer a{color:#554199}
+</style>
+</head><body>
+<header><div class="wrap">
+<div class="eyebrow">Spyryto / Laboratorio indipendente</div>
+<h1>Haxe<br>Experiments<span style="color:#f8c55c">.</span></h1>
+<p class="lead">Un posto dove le idee diventano piccoli programmi misurabili: compilati automaticamente, provabili nel browser oppure scaricabili per desktop.</p>
+<span class="tag">Haxe 4.3.7</span><span class="tag">Sorgenti aperti</span><span class="tag">CI riproducibile</span>
+</div></header>
+<main class="wrap"><h2 class="section-title">Esperimenti</h2>
+<div class="grid">
+<article><span class="number">001 · UI</span><h3>HaxeUI: HTML5 e wxWidgets</h3><p>Stesso codice Haxe per un'interfaccia con casella di testo, pulsanti e progresso simulato. Ora provabile via browser; backend nativo in preparazione.</p><a class="action" href="./experiments/001-haxeui/">Apri la demo</a><a class="secondary" href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/001-haxeui">Codice</a></article>
+<article><span class="number">000 · NATIVE</span><h3>Baseline hxcpp</h3><p>Una piccola utility senza GUI, compilata in codice nativo. Serve come riferimento per misurare il peso aggiuntivo delle interfacce.</p><a class="action" href="https://github.com/Spyryto/Haxe-Experiments/actions/workflows/validate.yml">Scarica la build</a><a class="secondary" href="https://github.com/Spyryto/Haxe-Experiments/tree/main/experiments/000-cli">Codice</a></article>
+</div><p class="note">Le build e i risultati vengono considerati verificati solo dopo una CI verde. Le demo simulate non effettuano installazioni né download veri. I pacchetti di GitHub Actions richiedono l'accesso a GitHub e hanno una scadenza di conservazione.</p>
+</main><footer><div class="wrap">Creato per sperimentare senza magia. <a href="https://github.com/Spyryto/Haxe-Experiments">Repository GitHub</a> · <a href="https://github.com/Spyryto/Haxe-Experiments/actions">Stato delle build</a></div></footer>
+</body></html>

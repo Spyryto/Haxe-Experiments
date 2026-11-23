@@ -1,0 +1,3 @@
+-cp experiments/000-cli/src
+-main Main
+-cpp build/cli

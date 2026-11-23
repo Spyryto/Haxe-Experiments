@@ -1,0 +1,6 @@
+-cp experiments/001-haxeui/src
+-lib hxWidgets
+-lib haxeui-core:1.7.0
+-lib haxeui-hxwidgets:1.7.0
+-main Main
+-cpp build/haxeui-hxwidgets
