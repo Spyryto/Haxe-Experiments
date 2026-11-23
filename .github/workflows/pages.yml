@@ -32,6 +32,10 @@ jobs:
         run: |
           haxe experiments/001-haxeui/html5.hxml
           test -s site/experiments/001-haxeui/Main.js
+      - name: Build DOM renderer lab
+        run: |
+          haxe experiments/004-dom-renderers/build.hxml
+          test -s site/experiments/004-dom-renderers/Main.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
