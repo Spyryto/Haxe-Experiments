@@ -52,3 +52,7 @@ La prima compilazione Windows è riuscita e il processo ha mostrato una finestra
 [Prima build valida della PR #4](https://github.com/Spyryto/Haxe-Experiments/actions/runs/45172245483)
 
 Queste misure non dimostrano automaticamente portabilità su installazioni Windows pulite: la prova manuale è ancora necessaria. Le successive build registrano anche la dimensione della baseline CLI, compilata nello stesso ambiente.
+
+## Confronto con hxWidgets diretto
+
+La [versione 003](../003-hxwidgets-direct/README.md) riproduce gli stessi componenti e interazioni senza il livello HaxeUI; la CI misura le dimensioni dei due EXE nello stesso runner Windows.

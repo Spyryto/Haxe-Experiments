@@ -1,0 +1,9 @@
+# Haxe -> hxcpp -> hxWidgets (NO haxeui-core or haxeui-hxwidgets).
+# Deliberately identical native toolkit/ABI to experiment 002.
+-cp experiments/003-hxwidgets-direct/src
+-main Main
+-lib hxWidgets:1.12.0
+-D WXSTATIC
+-D HXCPP_M64
+-D ABI=-MD
+-cpp build/hxwidgets-direct
