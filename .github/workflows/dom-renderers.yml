@@ -1,0 +1,21 @@
+name: DOM renderer lab
+on:
+  push:
+    paths:
+      - 'experiments/004-dom-renderers/**'
+      - '.github/workflows/dom-renderers.yml'
+  pull_request:
+    paths:
+      - 'experiments/004-dom-renderers/**'
+      - '.github/workflows/dom-renderers.yml'
+  workflow_dispatch:
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+      - run: haxe experiments/004-dom-renderers/build.hxml
+      - run: test -s site/experiments/004-dom-renderers/Main.js
