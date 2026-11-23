@@ -1,0 +1,4 @@
+-cp experiments/004-dom-renderers/src
+-main Main
+-js site/experiments/004-dom-renderers/Main.js
+-dce full
