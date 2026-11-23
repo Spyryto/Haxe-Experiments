@@ -12,7 +12,7 @@ a{color:#9bd5ff}code{color:#b4e8f9}
 <h1>DOM Lab</h1>
 <p>Tre obiettivi: capire i meccanismi, osservare le mutazioni DOM, confrontare implementazioni Haxe.</p>
 <section><h2>Primo esperimento: nodi persistenti</h2><p>Questi sono <strong>modelli didattici ridotti</strong>, non ancora port completi di Imba o hyperHTML. Premendo «Render senza modifica» non devono avvenire nuove scritture.</p><div id="app"></div></section>
-<section><h2>Come funzionano?</h2>
+<section><h2>Come funzionano?</h2><p>La lista keyed conserva gli stessi elementi LI quando cambia l'ordine. L'algoritmo didattico è intenzionalmente semplice: non è il port del domdiff originale e non garantisce il numero minimo di spostamenti.</p>
 <p><strong>Imba-style:</strong> conserva i riferimenti ai nodi e il valore precedente; aggiorna soltanto quando cambia.</p>
 <p><strong>hyperHTML-style:</strong> conserva il template e aggiorna lo slot dinamico; il vero hyperHTML supporta anche attributi, eventi, wire e liste con diff.</p>
 <p><strong>Da implementare:</strong> macro Haxe che generano nodi, slot attributo/evento, riconciliazione keyed, gestione lifecycle, benchmark indipendenti dalla UI.</p>
