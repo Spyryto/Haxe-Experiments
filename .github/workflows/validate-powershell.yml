@@ -1,0 +1,41 @@
+name: Validate PowerShell inspection scripts
+on:
+  pull_request:
+    paths:
+      - 'experiments/004-paradigms/scripts/**'
+      - 'experiments/005-binary-anatomy/**'
+      - '.github/workflows/validate-powershell.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/004-paradigms/scripts/**'
+      - 'experiments/005-binary-anatomy/**'
+      - '.github/workflows/validate-powershell.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  powershell-syntax:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse scripts without executing expensive builds
+        shell: pwsh
+        run: |
+          $scripts = @(
+            "experiments/004-paradigms/scripts/measure-js.ps1",
+            "experiments/004-paradigms/scripts/measure-cpp.ps1",
+            "experiments/005-binary-anatomy/inspect.ps1"
+          )
+          foreach ($file in $scripts) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $file).Path, [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errors | Format-List
+              throw "PowerShell parser errors in $file"
+            }
+            Write-Host "PASS $file"
+          }
