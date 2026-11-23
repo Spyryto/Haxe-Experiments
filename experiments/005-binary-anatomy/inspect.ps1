@@ -39,7 +39,7 @@ function Find-Map([string]$mapName) {
 $cases = @(
     @{ name = "000-cli"; dir = "build/cli"; map = "scan-cli.map" },
     @{ name = "003-direct"; dir = "build/hxwidgets-direct"; map = "scan-direct.map" },
-    @{ name = "002-haxeui"; dir = "build/haxeui-hxwidgets"; map = "scan-haxeui.map" }
+    @{ name = "002-haxeui"; dir = "build/haxeui-wxwidgets"; map = "scan-haxeui.map" }
 )
 $results = @()
 foreach ($item in $cases) {
