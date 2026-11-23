@@ -36,9 +36,9 @@ class Main {
     final burst = Browser.document.createButtonElement();
     burst.textContent = "1000 aggiornamenti";
     burst.onclick = _ -> {
-      final start = js.lib.Performance.now();
+      final start = Browser.window.performance.now();
       for (i in 0...1000) { count++; update(); }
-      final elapsed = js.lib.Performance.now() - start;
+      final elapsed = Browser.window.performance.now() - start;
       metrics.textContent += ' | 1000 update: ' + Math.round(elapsed * 100) / 100 + ' ms (include UI metriche)';
     };
     host.appendChild(burst);
